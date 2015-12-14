@@ -18,11 +18,13 @@ function main = |args|{
         	var sender = msg:headers():get("sent-by")
         	if(sender == userName){
         		println("msg : '"+msg:body()+"', sent successfully!")
+        	} else if(sender == "[user-chanel]"){
+        		println("[INFO] " + msg:body() + " is online.")
         	} else{
     			println("[ALERT] Received Msg from "+ sender + " : " + msg:body())
     		}
     	})
-    	eb:publish("chat-demo","this is a test msg",DeliveryOptions():addHeader("sent-by","[chat-program]"))
+    	eb:publish("chat-demo",userName,DeliveryOptions():addHeader("sent-by","[user-chanel]"))
     	var mainBlockingCode = {
 			var finish = false
 			while(not finish){
@@ -34,7 +36,7 @@ function main = |args|{
 			}
 			return "Stopping Chat Program"
 		}
-        println("\rChat Program Running!")	
+        println("Chat Program Running!")	
 		vertx:executeBlocking(|f|->f:complete(mainBlockingCode()),|r|->println(r:result()))
     })
 }
