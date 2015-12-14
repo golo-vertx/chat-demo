@@ -6,7 +6,6 @@ import io.vertx.core.VertxOptions
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.eventbus.DeliveryOptions
 
-
 function main = |args|{
 	var chatVertStart = |verticle|{
 		let vertx = verticle: getVertx()
@@ -23,8 +22,7 @@ function main = |args|{
         println(chatVert)
         vertx: deployVerticle(chatVert,|depId|{
         	println("Chat Program Running!")
-        	eb:publish("chat-demo","this is missing!!",DeliveryOptions():addHeader("sent-by","xxx"))
-        	var msgPublisher = chatVert:getVertx():eventBus():publisher("chat-demo",DeliveryOptions():addHeader("sent-by","[publisher test]"))
+        	eb:publish("chat-demo","[Test Msg]",DeliveryOptions():addHeader("sent-by","[chat program]"))
         	var mainBlockingCode = {
 				var userName = readln("Enter User Name? ")
 				var finish = false
@@ -34,7 +32,6 @@ function main = |args|{
 						finish = true
 					}
 					eb:publish("chat-demo",msg,DeliveryOptions():addHeader("sent-by",userName))
-					msgPublisher:write(msg)
 				}
 				return "Stopping Chat Program"
 			}
